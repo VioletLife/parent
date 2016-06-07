@@ -1,25 +1,27 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-  Copyright 2010-2015 The MyBatis Team
 
-  Licensed under the Apache License, Version 2.0 (the "License");
-  you may not use this file except in compliance with the License.
-  You may obtain a copy of the License at
+       Copyright 2010-2016 the original author or authors.
 
-    http://www.apache.org/licenses/LICENSE-2.0
+       Licensed under the Apache License, Version 2.0 (the "License");
+       you may not use this file except in compliance with the License.
+       You may obtain a copy of the License at
 
-  Unless required by applicable law or agreed to in writing, software
-  distributed under the License is distributed on an "AS IS" BASIS,
-  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-  See the License for the specific language governing permissions and
-  limitations under the License.
+          http://www.apache.org/licenses/LICENSE-2.0
+
+       Unless required by applicable law or agreed to in writing, software
+       distributed under the License is distributed on an "AS IS" BASIS,
+       WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+       See the License for the specific language governing permissions and
+       limitations under the License.
+
 -->
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
 
   <groupId>org.mybatis</groupId>
   <artifactId>mybatis-parent</artifactId>
-  <version>27-SNAPSHOT</version>
+  <version>28-SNAPSHOT</version>
   <packaging>pom</packaging>
 
   <name>mybatis-parent</name>
@@ -260,7 +262,7 @@
   </distributionManagement>
 
   <properties>
-    <clirr.comparisonVersion>25</clirr.comparisonVersion>
+    <clirr.comparisonVersion>26</clirr.comparisonVersion>
     <gcu.product>${project.name}</gcu.product>
     <maven.build.timestamp.format>yyyy-MM-dd HH:mm:ssZ</maven.build.timestamp.format>
     <maven.compiler.source>1.6</maven.compiler.source>
@@ -273,7 +275,7 @@
      | plugins configuration
     -->
     <javadoc.version>2.10.3</javadoc.version>
-    <surefire.version>2.19</surefire.version>
+    <surefire.version>2.19.1</surefire.version>
     <findbugs.onlyAnalyze />
     <!--
      | OSGi configuration properties
@@ -283,6 +285,11 @@
     <osgi.import>*</osgi.import>
     <osgi.dynamicImport />
     <osgi.private />
+
+    <!-- Animal Sniffer Signature -->
+    <signature.group>org.codehaus.mojo.signature</signature.group>
+    <signature.artifact>java16</signature.artifact>
+    <signature.version>1.1</signature.version>
   </properties>
 
   <build>
@@ -296,22 +303,28 @@
           <configuration>
             <header>${project.basedir}/license.txt</header>
             <excludes>
-              <exclude>target/**</exclude>
-              <exclude>**/.gitignore</exclude>
-              <exclude>**/*.txt</exclude>
-              <exclude>**/*.xml</exclude>
-              <exclude>**/*.properties</exclude>
-              <exclude>**/*.html</exclude>
-              <exclude>**/*.css</exclude>
-              <exclude>**/*.sql</exclude>
+              <exclude>**/*.ctrl</exclude>
+              <exclude>**/*.dat</exclude>
+              <exclude>**/*.lck</exclude>
+              <exclude>**/*.log</exclude>
+              <exclude>.factorypath</exclude>
+              <exclude>.gitattributes</exclude>
+              <exclude>ICLA</exclude>
+              <exclude>LICENSE</exclude>
+              <exclude>KEYS</exclude>
+              <exclude>NOTICE</exclude>
             </excludes>
-            <includes>
-              <include>**/*.java</include>
-            </includes>
             <mapping>
-              <java>JAVADOC_STYLE</java>
+              <xml.vm>XML_STYLE</xml.vm>
             </mapping>
           </configuration>
+          <dependencies>
+            <dependency>
+              <groupId>com.mycila</groupId>
+              <artifactId>license-maven-plugin-git</artifactId>
+              <version>2.11</version>
+            </dependency>
+          </dependencies>
         </plugin>
 
         <!-- Antrun here only to override eclipse settings -->
@@ -337,7 +350,7 @@
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-compiler-plugin</artifactId>
-          <version>3.3</version>
+          <version>3.5.1</version>
           <configuration>
             <optimize>true</optimize>
             <!-- Slightly faster builds, see https://issues.apache.org/jira/browse/MCOMPILER-209 -->
@@ -348,7 +361,7 @@
         <plugin>
           <groupId>org.eluder.coveralls</groupId>
           <artifactId>coveralls-maven-plugin</artifactId>
-          <version>3.2.0</version>
+          <version>4.1.0</version>
         </plugin>
 
         <plugin>
@@ -390,30 +403,31 @@
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-release-plugin</artifactId>
-          <version>2.5.2</version>
+          <version>2.5.3</version>
           <configuration>
+            <autoVersionSubmodules>true</autoVersionSubmodules>
             <mavenExecutorId>forked-path</mavenExecutorId>
             <useReleaseProfile>false</useReleaseProfile>
-            <arguments>-Prelease</arguments>
+            <releaseProfiles>release</releaseProfiles>
           </configuration>
         </plugin>
 
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-resources-plugin</artifactId>
-          <version>2.7</version>
+          <version>3.0.0</version>
         </plugin>
 
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-shade-plugin</artifactId>
-          <version>2.4.2</version>
+          <version>2.4.3</version>
         </plugin>
 
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-site-plugin</artifactId>
-          <version>3.4</version>
+          <version>3.5.1</version>
           <executions>
             <execution>
               <id>attach-descriptor</id>
@@ -432,7 +446,7 @@
             <dependency>
               <groupId>org.apache.maven.skins</groupId>
               <artifactId>maven-fluido-skin</artifactId>
-              <version>1.4</version>
+              <version>1.5</version>
             </dependency>
             <dependency>
               <groupId>org.apache.maven.wagon</groupId>
@@ -451,7 +465,7 @@
         <plugin>
           <groupId>org.jacoco</groupId>
           <artifactId>jacoco-maven-plugin</artifactId>
-          <version>0.7.5.201505241946</version>
+          <version>0.7.6.201602180812</version>
         </plugin>
 
         <plugin>
@@ -515,12 +529,12 @@
       <plugin>
         <groupId>org.codehaus.mojo</groupId>
         <artifactId>animal-sniffer-maven-plugin</artifactId>
-        <version>1.14</version>
+        <version>1.15</version>
         <configuration>
           <signature>
-            <groupId>org.codehaus.mojo.signature</groupId>
-            <artifactId>java16</artifactId>
-            <version>1.1</version>
+            <groupId>${signature.group}</groupId>
+            <artifactId>${signature.artifact}</artifactId>
+            <version>${signature.version}</version>
           </signature>
         </configuration>
         <executions>
@@ -578,7 +592,7 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-jar-plugin</artifactId>
-        <version>2.6</version>
+        <version>3.0.0</version>
         <configuration>
           <archive>
             <manifestFile>${project.build.directory}/osgi/MANIFEST.MF</manifestFile>
@@ -660,28 +674,13 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-project-info-reports-plugin</artifactId>
-        <version>2.8.1</version>
+        <version>2.9</version>
       </plugin>
 
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-javadoc-plugin</artifactId>
         <version>${javadoc.version}</version>
-        <configuration>
-          <bootclasspath>${sun.boot.class.path}</bootclasspath>
-          <doclet>com.google.doclava.Doclava</doclet>
-          <useStandardDocletOptions>false</useStandardDocletOptions>
-          <additionalJOption>-J-Xmx1024m</additionalJOption>
-          <docletArtifact>
-            <groupId>com.google.doclava</groupId>
-            <artifactId>doclava</artifactId>
-            <version>1.0.6</version>
-          </docletArtifact>
-          <additionalparam>
-            -hdf project.name "${project.name}"
-            -d ${project.reporting.outputDirectory}/apidocs
-          </additionalparam>
-        </configuration>
         <reportSets>
           <reportSet>
             <id>default</id>
@@ -729,7 +728,7 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-changes-plugin</artifactId>
-        <version>2.11</version>
+        <version>2.12</version>
         <configuration>
           <issueLinkTemplate>%URL%/issues/%ISSUE%</issueLinkTemplate>
         </configuration>
@@ -745,7 +744,7 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-pmd-plugin</artifactId>
-        <version>3.5</version>
+        <version>3.6</version>
         <configuration>
           <linkXref>true</linkXref>
           <minimumTokens>100</minimumTokens>
@@ -798,7 +797,7 @@
       <plugin>
         <groupId>org.jacoco</groupId>
         <artifactId>jacoco-maven-plugin</artifactId>
-        <version>0.7.5.201505241946</version>
+        <version>0.7.6.201602180812</version>
       </plugin>
 
     </plugins>
@@ -838,7 +837,7 @@
           <plugin>
             <groupId>org.apache.maven.plugins</groupId>
             <artifactId>maven-source-plugin</artifactId>
-            <version>2.4</version>
+            <version>3.0.0</version>
             <executions>
               <execution>
                 <id>attach-sources</id>
@@ -946,6 +945,27 @@
     </profile>
 
     <profile>
+      <id>javadoc.java8</id>
+      <activation>
+        <jdk>[1.8,)</jdk>
+      </activation>
+      <build>
+        <pluginManagement>
+          <plugins>
+            <plugin>
+              <groupId>org.apache.maven.plugins</groupId>
+              <artifactId>maven-javadoc-plugin</artifactId>
+              <version>${javadoc.version}</version>
+              <configuration>
+                <additionalparam>-Xdoclint:-missing</additionalparam>
+              </configuration>
+            </plugin>
+          </plugins>
+        </pluginManagement>
+      </build>
+    </profile>
+
+    <profile>
       <id>license</id>
       <activation>
         <file>
@@ -1006,7 +1026,7 @@
                       <pluginExecutionFilter>
                         <groupId>org.jacoco</groupId>
                         <artifactId>jacoco-maven-plugin</artifactId>
-                        <versionRange>[0.7.5.201505241946,)</versionRange>
+                        <versionRange>[0.7.6.201602180812,)</versionRange>
                         <goals>
                           <goal>prepare-agent</goal>
                         </goals>
